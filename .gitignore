@@ -1,0 +1,19 @@
+# dependencies and build output
+node_modules/
+dist/
+build/
+.astro/
+
+# environment and secrets
+.env
+.env.*
+
+# client brief files (never published)
+.brief/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

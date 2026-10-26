@@ -1,0 +1,182 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Icon from '../components/Icon.astro';
+import { business, integrations, isPlaceholder, telLink, whatsappLink } from '../config';
+import { photos, type PhotoKey } from '../data/photos';
+import { photo, url } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  /** photo used when the page is shared (WhatsApp, Facebook…) */
+  image?: PhotoKey;
+  /** extra JSON-LD objects for this page */
+  schema?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const { title, description, image = 'heroLiving', schema = [], noindex = false } = Astro.props;
+const fullTitle = title.includes(business.name) ? title : `${title} | ${business.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = photo(photos[image].id, 1200, 0.525, 75);
+const homeUrl = new URL(url('/'), Astro.site).href;
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'HomeAndConstructionBusiness',
+  '@id': `${homeUrl}#business`,
+  name: business.name,
+  description: 'Boutique interior design studio in Ahmedabad for turnkey apartment, bungalow, modular kitchen, office and café interiors.',
+  url: homeUrl,
+  logo: new URL(url('/logo.svg'), Astro.site).href,
+  image: photo(photos.heroLiving.id, 1200, 0.75),
+  telephone: business.phoneE164,
+  email: business.email,
+  foundingDate: String(business.founded),
+  founder: business.founders.map((name) => ({ '@type': 'Person', name })),
+  priceRange: '₹₹₹',
+  currenciesAccepted: 'INR',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: business.address.street,
+    addressLocality: business.address.city,
+    addressRegion: business.address.region,
+    postalCode: business.address.postalCode,
+    addressCountry: business.address.country,
+  },
+  areaServed: business.serviceArea.map((name) => ({ '@type': 'Place', name })),
+  hasMap: business.mapsLink,
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '10:30',
+      closes: '19:30',
+    },
+  ],
+  sameAs: Object.values(business.social),
+};
+
+const fontsHref =
+  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Inter:wght@400;500;600&display=swap';
+
+const ga4 = isPlaceholder(integrations.ga4Id) ? '' : integrations.ga4Id;
+const pixel = isPlaceholder(integrations.metaPixelId) ? '' : integrations.metaPixelId;
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#2F3E46" />
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={url('/favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={url('/apple-touch-icon.png')} />
+    <link rel="sitemap" href={url('/sitemap.xml')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={photos[image].alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href={fontsHref} media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href={fontsHref} /></noscript>
+    <slot name="head" />
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
+    {schema.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+
+    {
+      ga4 && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`} />
+          <script is:inline define:vars={{ ga4 }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', ga4);
+          </script>
+        </>
+      )
+    }
+    {
+      pixel && (
+        <script is:inline define:vars={{ pixel }}>
+          !(function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+              n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s);
+          })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', pixel);
+          fbq('track', 'PageView');
+        </script>
+      )
+    }
+  </head>
+  <body class="pb-16 md:pb-0">
+    <a href="#main" class="sr-only z-50 rounded bg-primary px-4 py-3 text-white focus:not-sr-only focus:fixed focus:top-3 focus:left-3">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+
+    <!-- Floating WhatsApp button (every page) -->
+    <a
+      href={whatsappLink()}
+      target="_blank"
+      rel="noopener"
+      class="fixed right-4 bottom-20 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#1F7A4D] text-white shadow-lg shadow-black/25 transition-transform hover:scale-105 md:right-6 md:bottom-6 md:h-16 md:w-16"
+      data-track="whatsapp_float"
+    >
+      <Icon name="whatsapp" class="h-7 w-7 md:h-8 md:w-8" label="Chat with Aangan Interiors on WhatsApp" />
+    </a>
+
+    <!-- Sticky Call | WhatsApp bar on phones -->
+    <nav aria-label="Quick contact" class="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 border-t border-white/10 bg-primary text-white md:hidden">
+      <a href={telLink} class="flex h-16 items-center justify-center gap-2 font-semibold" data-track="call_bar">
+        <Icon name="phone" /> Call
+      </a>
+      <a href={whatsappLink()} target="_blank" rel="noopener" class="flex h-16 items-center justify-center gap-2 border-l border-white/15 bg-brass font-semibold text-ink" data-track="whatsapp_bar">
+        <Icon name="whatsapp" /> WhatsApp
+      </a>
+    </nav>
+
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

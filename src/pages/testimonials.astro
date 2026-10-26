@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { business } from '../config';
+import { testimonials } from '../data/content';
+---
+<Base
+  title="Client Reviews & Testimonials"
+  description={`Read what families and business owners say about Aangan Interiors. Rated ${business.googleRating}★ from ${business.googleReviewCount} Google reviews.`}
+  image="livingIvory"
+>
+  <PageHero eyebrow="Testimonials" title="In our clients’ words" intro="Homeowners, NRIs and business owners on what it was like to work with us." />
+
+  <section class="container-x pb-20 sm:pb-28" aria-label="Reviews">
+    <div class="reveal flex flex-col items-start gap-6 rounded-md bg-white p-8 sm:flex-row sm:items-center sm:p-10">
+      <div class="flex h-24 w-24 shrink-0 flex-col items-center justify-center rounded-full border-2 border-brass">
+        <span class="font-serif text-4xl font-semibold text-primary">{business.googleRating}</span>
+      </div>
+      <div>
+        <div class="flex gap-1 text-brass-dark" role="img" aria-label={`Rated ${business.googleRating} out of 5`}>
+          {Array.from({ length: 5 }).map(() => <Icon name="star" class="h-6 w-6" />)}
+        </div>
+        <p class="mt-2 text-xl font-semibold text-primary">Google rating: {business.googleRating} out of 5</p>
+        <p class="text-muted">From {business.googleReviewCount} reviews on Google</p>
+      </div>
+    </div>
+
+    <ul class="mt-12 grid gap-6 md:grid-cols-2">
+      {
+        testimonials.map((t, i) => (
+          <li class:list={['reveal', i === 0 && 'md:col-span-2']}>
+            <figure class="h-full rounded-md bg-sand p-8 sm:p-10">
+              <span class="block h-10 font-serif text-7xl leading-none text-brass-dark" aria-hidden="true">“</span>
+              <blockquote class:list={['mt-4 font-serif leading-snug font-semibold text-primary', i === 0 ? 'text-4xl' : 'text-3xl']}>“{t.text}”</blockquote>
+              <figcaption class="mt-6">
+                <span class="font-semibold">{t.name}</span>
+                <span class="text-muted"> · {t.place}</span>
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <CtaBand heading="Your home could be our next story" />
+</Base>

@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import StatsStrip from '../components/StatsStrip.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { team, promises } from '../data/content';
+
+const avatarColours = ['#2F3E46', '#7E5F3C', '#4B5D52', '#5C4B3B'];
+---
+<Base
+  title="About Us: Neha & Rohan Desai, Interior Designers in Ahmedabad"
+  description="Aangan Interiors is a family-run interior design studio in Ahmedabad, started in 2014 by architects Neha and Rohan Desai. 120+ projects, an 18-member in-house team and our own factory."
+  image="studioDrawing"
+>
+  <PageHero eyebrow="About Aangan" title="The courtyard at the heart of your home" photo="livingArches" />
+
+  <!-- Story -->
+  <section class="container-x grid gap-12 py-20 sm:py-28 lg:grid-cols-12" aria-labelledby="story-heading">
+    <div class="lg:col-span-5">
+      <SectionHeading id="story-heading" eyebrow="Our story" title="Started by an architect couple, in 2014" />
+    </div>
+    <div class="reveal prose-brand lg:col-span-7">
+      <p>
+        Aangan means courtyard: the place where an Indian home comes together. For 11 years we have designed spaces around how families actually live: morning chai on the balcony, kids doing homework at the dining table, grandparents who need good light to read. We sit with you, listen, sketch, and show you your home in 3D before a single wall is touched. Then our own team builds it, on time and on budget, with one fixed quotation and no surprises.
+      </p>
+      <p>
+        Aangan Interiors is a family-run studio, started in 2014 by architect couple Neha and Rohan Desai. Neha leads design; Rohan runs every site. Since then we have completed 120+ homes, offices and cafés across Gujarat with an in-house team of 18 designers, site supervisors and carpenters.
+      </p>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section class="on-dark bg-primary py-20 text-white sm:py-24" aria-labelledby="mission-heading">
+    <div class="container-x max-w-4xl text-center">
+      <p class="eyebrow">Our mission</p>
+      <h2 id="mission-heading" class="reveal mt-5 text-4xl leading-tight text-white sm:text-5xl">
+        To give every family a home that feels like theirs, built honestly, on time and without surprises.
+      </h2>
+    </div>
+  </section>
+
+  <!-- Studio photos -->
+  <section class="container-x py-20 sm:py-28" aria-labelledby="studio-heading">
+    <SectionHeading id="studio-heading" eyebrow="The studio" title="Where your home takes shape" text="Visit our Prahlad Nagar studio to touch and choose materials. Kitchens and wardrobes are made at our own factory in Changodar." />
+    <ul class="mt-12 grid gap-4 sm:grid-cols-3">
+      <li class="reveal overflow-hidden rounded-md sm:col-span-2"><Img name="studioDrawing" ratio={0.6} max={1280} sizes="(min-width: 640px) 66vw, 100vw" class="h-full w-full object-cover" /></li>
+      <li class="reveal overflow-hidden rounded-md"><Img name="studioDesk" ratio={1.2} max={640} sizes="(min-width: 640px) 33vw, 100vw" class="h-full w-full object-cover" /></li>
+      <li class="reveal overflow-hidden rounded-md"><Img name="studioChairs" ratio={0.8} max={640} sizes="(min-width: 640px) 33vw, 100vw" class="h-full w-full object-cover" /></li>
+      <li class="reveal overflow-hidden rounded-md sm:col-span-2"><Img name="shelvesWall" ratio={0.4} max={1280} sizes="(min-width: 640px) 66vw, 100vw" class="h-full w-full object-cover" /></li>
+    </ul>
+  </section>
+
+  <!-- Team -->
+  <section class="bg-sand py-20 sm:py-28" aria-labelledby="team-heading">
+    <div class="container-x">
+      <SectionHeading id="team-heading" eyebrow="The team" title="The people behind your project" />
+      <ul class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          team.map((m, i) => (
+            <li class="reveal rounded-md bg-white p-6 text-center">
+              <svg viewBox="0 0 160 160" class="mx-auto h-32 w-32" role="img" aria-label={`Illustrated avatar of ${m.name}`}>
+                <rect width="160" height="160" rx="80" fill="#EFE7DC" />
+                <path d="M40 160V96a40 40 0 0 1 80 0v64" fill={avatarColours[i % 4]} />
+                <circle cx="80" cy="64" r="24" fill="#C8A27A" />
+                <text x="80" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#FFFFFF" letter-spacing="2">{m.initials}</text>
+              </svg>
+              <h3 class="mt-5 text-2xl">{m.name}</h3>
+              <p class="mt-1 text-sm font-semibold text-brass-dark">{m.role}</p>
+              <p class="mt-2 text-sm text-muted">{m.note}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Numbers and promises -->
+  <section class="container-x py-20 sm:py-28" aria-labelledby="numbers-heading">
+    <SectionHeading id="numbers-heading" eyebrow="In numbers" title="11 years, 120+ projects, one way of working" />
+    <div class="mt-12"><StatsStrip /></div>
+    <ul class="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+      {
+        promises.map((p) => (
+          <li class="reveal border-t-2 border-brass pt-5">
+            <h3 class="text-2xl">{p.title}</h3>
+            <p class="mt-2 text-[0.95rem] leading-relaxed text-muted">{p.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <CtaBand />
+</Base>

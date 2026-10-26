@@ -1,0 +1,73 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { projects, categories } from '../../data/projects';
+
+// Vary card heights for the masonry layout
+const ratios = [0.8, 1.15, 0.68, 1.0, 0.72, 1.2, 0.85, 0.66, 1.05, 0.75];
+---
+<Base
+  title="Portfolio: Interior Design Projects in Ahmedabad"
+  description="See apartments, bungalows, modular kitchens, offices and cafés designed and built by Aangan Interiors across Ahmedabad, Gandhinagar and Vadodara."
+  image="livingArches"
+>
+  <PageHero
+    eyebrow="Portfolio"
+    title="Portfolio"
+    intro="A few of our 120+ completed homes, kitchens, offices and cafés across Gujarat. Choose a category, then open any project to see the full story."
+  />
+
+  <section class="container-x pb-20 sm:pb-28" aria-label="Projects">
+    <div class="flex flex-wrap gap-2 sm:gap-3" role="group" aria-label="Filter projects by type" data-filters>
+      {
+        ['All', ...categories].map((c, i) => (
+          <button
+            type="button"
+            data-filter={c}
+            aria-pressed={i === 0 ? 'true' : 'false'}
+            class="min-h-11 rounded-full border border-primary/40 px-5 text-sm font-medium text-primary transition-colors hover:border-primary aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white"
+          >
+            {c}
+          </button>
+        ))
+      }
+    </div>
+    <p class="sr-only" aria-live="polite" data-filter-status></p>
+
+    <ul class="masonry mt-10 columns-1 sm:columns-2 lg:columns-3">
+      {
+        projects.map((p, i) => (
+          <li class="reveal mb-10" data-category={p.category}>
+            <ProjectCard project={p} ratio={ratios[i % ratios.length]} headingLevel="h2" />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const items = document.querySelectorAll<HTMLElement>('[data-category]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  buttons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter!;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let shown = 0;
+      items.forEach((item) => {
+        const match = filter === 'All' || item.dataset.category === filter;
+        item.hidden = !match;
+        if (match) {
+          shown++;
+          item.classList.add('is-visible');
+        }
+      });
+      if (status) status.textContent = `Showing ${shown} ${filter === 'All' ? '' : filter.toLowerCase() + ' '}project${shown === 1 ? '' : 's'}`;
+    }),
+  );
+</script>

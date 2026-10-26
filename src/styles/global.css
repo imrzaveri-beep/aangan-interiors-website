@@ -1,0 +1,206 @@
+@import 'tailwindcss';
+
+/* Brand colours and fonts from the brief */
+@theme {
+  --color-primary: #2f3e46; /* deep slate */
+  --color-primary-dark: #233038;
+  --color-brass: #c8a27a; /* warm sand / brass: on dark backgrounds and for decoration */
+  --color-brass-dark: #7e5f3c; /* brass for text on light backgrounds (AA contrast) */
+  --color-brass-light: #e9dccb;
+  --color-ivory: #f7f3ee;
+  --color-sand: #efe7dc;
+  --color-ink: #1b1b1b;
+  --color-muted: #5a5f62;
+
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ivory font-sans text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-semibold text-primary;
+    line-height: 1.1;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-brass-dark);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-brass);
+  }
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.25em] text-brass-dark uppercase;
+  }
+  .on-dark .eyebrow {
+    @apply text-brass;
+  }
+  .btn-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 bg-primary text-white hover:bg-primary-dark;
+  }
+  .btn-brass {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 bg-brass text-ink hover:bg-brass-light;
+  }
+  .btn-outline {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 border-2 border-primary text-primary hover:bg-primary hover:text-white;
+  }
+  .btn-outline-light {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 border-2 border-white/80 text-white hover:bg-white hover:text-primary;
+  }
+  .link-arrow {
+    @apply inline-flex items-center gap-1 font-semibold text-primary underline decoration-brass decoration-2 underline-offset-4 hover:text-brass-dark;
+  }
+  .prose-brand p {
+    @apply mb-5 text-[1.05rem] leading-relaxed text-ink/90;
+  }
+  .prose-brand h3 {
+    @apply mt-8 mb-3 text-2xl;
+  }
+  .prose-brand ul {
+    @apply mb-5 list-disc space-y-2 pl-5 leading-relaxed text-ink/90 marker:text-brass-dark;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm font-medium text-ink;
+  }
+  .field {
+    @apply block min-h-12 w-full rounded-md border border-ink/25 bg-white px-4 py-3 text-base text-ink placeholder:text-muted/80 focus:border-primary focus:ring-2 focus:ring-primary/30 focus:outline-none;
+  }
+}
+
+/* Gentle fade-up on scroll. Only hidden when JavaScript is running, and never
+   animated for visitors who prefer reduced motion. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+html.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Gentle image zoom on hover (portfolio and cards) */
+.zoom-img {
+  transition: transform 0.7s ease;
+}
+.group:hover .zoom-img,
+.group:focus-visible .zoom-img {
+  transform: scale(1.05);
+}
+
+/* Portfolio masonry grid */
+.masonry {
+  column-gap: 1.5rem;
+}
+.masonry > * {
+  break-inside: avoid;
+}
+
+/* Before/after slider */
+.ba {
+  --pos: 50%;
+}
+.ba-before {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+.ba-before img {
+  filter: grayscale(0.55) brightness(0.95);
+}
+.ba-handle {
+  left: var(--pos);
+}
+.ba input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+  touch-action: pan-y;
+}
+.ba input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 48px;
+  height: 100vh;
+  background: transparent;
+}
+.ba input[type='range']::-moz-range-thumb {
+  width: 48px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+.ba:has(input:focus-visible) {
+  outline: 3px solid var(--color-brass-dark);
+  outline-offset: 4px;
+}
+
+/* Testimonials carousel */
+.carousel {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+.carousel > * {
+  scroll-snap-align: start;
+}
+
+/* FAQ accordion */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* Lightbox */
+dialog.lightbox::backdrop {
+  background: rgb(27 27 27 / 0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  html.js .reveal,
+  html.js .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .zoom-img,
+  .group:hover .zoom-img {
+    transition: none;
+    transform: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

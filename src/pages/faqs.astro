@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FaqList from '../components/FaqList.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { faqs } from '../data/content';
+import { whatsappLink } from '../config';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title="FAQs: Interior Design Cost, Time & Warranty"
+  description="Answers to common questions: free site visit, how long a 3BHK takes, fixed quotation, warranty, 3D designs, payment terms and working outside Ahmedabad."
+  schema={[schema]}
+>
+  <PageHero eyebrow="FAQs" title="Frequently asked questions" intro="Straight answers about cost, time and warranty. Can’t find yours? Ask us on WhatsApp." />
+
+  <section class="container-x grid gap-12 pb-20 sm:pb-28 lg:grid-cols-12" aria-label="Questions and answers">
+    <div class="reveal lg:col-span-8">
+      <FaqList items={faqs} />
+    </div>
+    <aside class="lg:col-span-4">
+      <div class="reveal rounded-md bg-sand p-8">
+        <h2 class="text-3xl">Still have a question?</h2>
+        <p class="mt-3 text-muted">Message us and a designer will reply within working hours.</p>
+        <a href={whatsappLink('Hi Aangan, I have a question about interiors for my home.')} target="_blank" rel="noopener" class="btn-primary mt-6">
+          <Icon name="whatsapp" /> Ask on WhatsApp
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  <CtaBand />
+</Base>

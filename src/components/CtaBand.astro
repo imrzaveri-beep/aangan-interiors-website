@@ -1,0 +1,33 @@
+---
+// The closing call-to-action band at the end of every page.
+import Icon from './Icon.astro';
+import { url } from '../lib/url';
+import { telLink, whatsappLink } from '../config';
+
+interface Props {
+  heading?: string;
+  text?: string;
+}
+const {
+  heading = 'Get a free 3D concept for your home',
+  text = 'Book a 30-minute visit, we come to you. Free first site visit within Ahmedabad.',
+} = Astro.props;
+---
+<section class="on-dark relative overflow-hidden bg-primary text-white" aria-labelledby="cta-heading">
+  <svg class="pointer-events-none absolute -right-16 -bottom-24 h-[26rem] w-[26rem] text-brass/15" viewBox="0 0 120 120" aria-hidden="true">
+    <rect x="3" y="3" width="114" height="114" fill="none" stroke="currentColor" stroke-width="3"></rect>
+    <path d="M30 117V62a30 30 0 0 1 60 0v55" fill="none" stroke="currentColor" stroke-width="3"></path>
+  </svg>
+  <div class="container-x relative py-16 sm:py-20 lg:py-24">
+    <div class="reveal max-w-3xl">
+      <p class="eyebrow">Free consultation</p>
+      <h2 id="cta-heading" class="mt-4 text-4xl text-white sm:text-5xl lg:text-6xl">{heading}</h2>
+      <p class="mt-5 max-w-xl text-lg text-white/85">{text}</p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-brass"><Icon name="whatsapp" /> Book free consultation</a>
+        <a href={url('/contact/#book')} class="btn-outline-light">Book a site visit</a>
+        <a href={telLink} class="btn-outline-light sm:hidden"><Icon name="phone" /> Call now</a>
+      </div>
+    </div>
+  </div>
+</section>

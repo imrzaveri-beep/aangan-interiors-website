@@ -1,0 +1,157 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { url } from '../lib/url';
+import { business, integrations, isPlaceholder, mailLink, telLink, whatsappLink } from '../config';
+
+const demo = isPlaceholder(integrations.formspreeFormId);
+const year = new Date().getFullYear();
+
+const columns = [
+  {
+    title: 'Services',
+    links: [
+      { label: 'All services & prices', href: '/services/' },
+      { label: 'Residential interiors', href: '/services/residential-interiors/' },
+      { label: 'Commercial interiors', href: '/services/commercial-interiors/' },
+      { label: 'Modular kitchens & wardrobes', href: '/services/modular-kitchens-wardrobes/' },
+    ],
+  },
+  {
+    title: 'Studio',
+    links: [
+      { label: 'Portfolio', href: '/portfolio/' },
+      { label: 'Our process', href: '/process/' },
+      { label: 'About us', href: '/about/' },
+      { label: 'Testimonials', href: '/testimonials/' },
+      { label: 'FAQs', href: '/faqs/' },
+      { label: 'Design tips', href: '/design-tips/' },
+      { label: 'Contact & book a visit', href: '/contact/' },
+    ],
+  },
+];
+
+const socials = [
+  { name: 'Instagram', href: business.social.instagram, icon: 'instagram' },
+  { name: 'Facebook', href: business.social.facebook, icon: 'facebook' },
+  { name: 'Pinterest', href: business.social.pinterest, icon: 'pinterest' },
+  { name: 'YouTube', href: business.social.youtube, icon: 'youtube' },
+] as const;
+---
+<footer class="on-dark bg-primary text-white/85">
+  <div class="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-10">
+    <div class="lg:col-span-4">
+      <a href={url('/')} class="inline-block" title="Home">
+        <Logo variant="light" class="h-12 w-auto" />
+      </a>
+      <p class="mt-5 max-w-sm leading-relaxed">
+        A family-run interior design studio in Ahmedabad since {business.founded}. Turnkey homes, kitchens, offices and cafés across Gujarat.
+      </p>
+      <ul class="mt-6 flex gap-2">
+        {
+          socials.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener"
+                class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:border-brass hover:text-brass"
+              >
+                <Icon name={s.icon} label={`Aangan Interiors on ${s.name}`} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="grid grid-cols-2 gap-8 lg:col-span-4">
+      {
+        columns.map((col) => (
+          <div>
+            <h2 class="font-sans text-xs font-semibold tracking-[0.2em] text-brass uppercase">{col.title}</h2>
+            <ul class="mt-4 space-y-1 text-[0.95rem]">
+              {col.links.map((l) => (
+                <li>
+                  <a href={url(l.href)} class="inline-block py-1.5 hover:text-brass">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="space-y-6 md:col-span-2 lg:col-span-4">
+      <div>
+        <h2 class="font-sans text-xs font-semibold tracking-[0.2em] text-brass uppercase">Visit the studio</h2>
+        <address class="mt-4 space-y-3 not-italic">
+          <a href={business.mapsLink} target="_blank" rel="noopener" class="flex gap-3 hover:text-brass">
+            <Icon name="pin" class="mt-0.5 h-5 w-5 shrink-0 text-brass" />
+            <span>{business.addressOneLine}<span class="block text-sm underline underline-offset-2">Open in Google Maps</span></span>
+          </a>
+          <a href={telLink} class="flex gap-3 hover:text-brass"><Icon name="phone" class="h-5 w-5 shrink-0 text-brass" />{business.phoneDisplay}</a>
+          <a href={mailLink} class="flex gap-3 hover:text-brass"><Icon name="mail" class="h-5 w-5 shrink-0 text-brass" />{business.email}</a>
+          <p class="flex gap-3">
+            <Icon name="clock" class="mt-0.5 h-5 w-5 shrink-0 text-brass" />
+            <span>
+              {business.hours.map((h) => (
+                <span class="block">{h.days}: {h.time}</span>
+              ))}
+            </span>
+          </p>
+        </address>
+      </div>
+
+      <div class="rounded-lg bg-white/[0.06] p-5">
+        <h2 class="font-sans text-base font-semibold text-white">Request a callback</h2>
+        <form
+          action={`https://formspree.io/f/${integrations.formspreeFormId}`}
+          method="POST"
+          data-enquiry
+          data-demo={demo ? 'true' : 'false'}
+          data-whatsapp-intro="Hi Aangan, please call me back about my home interiors."
+          class="mt-3 grid gap-3 sm:grid-cols-2"
+        >
+          <input type="hidden" name="_subject" value="Callback request: Aangan Interiors website" />
+          <input type="hidden" name="form" value="Footer callback" />
+          <div class="hidden" aria-hidden="true">
+            <label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+          </div>
+          <div>
+            <label for="cb-name" class="mb-1 block text-sm">Name</label>
+            <input id="cb-name" name="name" type="text" autocomplete="name" required maxlength="80" class="field" data-wa-label="Name" />
+          </div>
+          <div>
+            <label for="cb-phone" class="mb-1 block text-sm">Phone</label>
+            <input id="cb-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required pattern="[0-9 +\-]{10,16}" title="Please enter a 10-digit mobile number" class="field" data-wa-label="Phone" />
+          </div>
+          <p class="text-xs leading-relaxed text-white/75 sm:col-span-2">
+            We only use your number to call you back. <a href={url('/privacy-policy/')} class="underline underline-offset-2 hover:text-brass">Privacy Policy</a>
+          </p>
+          <div class="flex flex-wrap gap-2 sm:col-span-2">
+            <button type="submit" class="btn-brass" data-submit>Call me back</button>
+            <button type="button" class="btn-outline-light" data-wa-send><Icon name="whatsapp" /> Send on WhatsApp</button>
+          </div>
+          <p class="text-sm text-brass-light sm:col-span-2" role="alert" data-error hidden></p>
+        </form>
+        <div data-thanks hidden tabindex="-1" class="mt-3 outline-none">
+          <p class="font-semibold text-white">Thank you<span data-thanks-name></span>! We will call you back within one working day.</p>
+          {demo && <p class="mt-2 text-sm text-white/75">Demo mode: this form is not connected to email yet, so nothing was sent.</p>}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-white/15">
+    <div class="container-x flex flex-col gap-3 pt-6 pb-24 text-sm text-white/70 sm:flex-row sm:items-center sm:justify-between md:pb-6">
+      <p>© {year} {business.name}. All rights reserved.</p>
+      <p class="flex flex-wrap gap-x-5 gap-y-2">
+        <a href={url('/privacy-policy/')} class="hover:text-brass">Privacy Policy</a>
+        <a href={whatsappLink()} target="_blank" rel="noopener" class="hover:text-brass">WhatsApp us</a>
+      </p>
+    </div>
+  </div>
+</footer>

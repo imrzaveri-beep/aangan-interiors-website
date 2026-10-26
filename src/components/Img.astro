@@ -1,0 +1,55 @@
+---
+// Responsive, lazy-loaded photo from the photo list (WebP/AVIF from the Unsplash CDN).
+import { photos, type PhotoKey } from '../data/photos';
+import { photo, photoSrcset } from '../lib/url';
+
+interface Props {
+  name: PhotoKey;
+  /** height ÷ width, e.g. 0.75 for 4:3 */
+  ratio?: number;
+  /** largest width needed, in px */
+  max?: number;
+  sizes?: string;
+  class?: string;
+  alt?: string;
+  priority?: boolean;
+  /** different crop (height ÷ width) for phones under 768px, e.g. for full-width heroes */
+  mobileRatio?: number;
+}
+
+const { name, ratio = 0.75, max = 1280, sizes = '100vw', class: className = '', alt, priority = false, mobileRatio } = Astro.props;
+const p = photos[name];
+const width = Math.min(max, 1280);
+---
+{
+  mobileRatio ? (
+    <picture>
+      <source media="(min-width: 768px)" srcset={photoSrcset(p.id, max, ratio)} sizes={sizes} />
+      <img
+        src={photo(p.id, 800, mobileRatio)}
+        srcset={photoSrcset(p.id, 800, mobileRatio)}
+        sizes="100vw"
+        width="800"
+        height={Math.round(800 * mobileRatio)}
+        alt={alt ?? p.alt}
+        class={className}
+        loading={priority ? 'eager' : 'lazy'}
+        decoding={priority ? 'sync' : 'async'}
+        fetchpriority={priority ? 'high' : undefined}
+      />
+    </picture>
+  ) : (
+    <img
+      src={photo(p.id, width, ratio)}
+      srcset={photoSrcset(p.id, max, ratio)}
+      sizes={sizes}
+      width={width}
+      height={Math.round(width * ratio)}
+      alt={alt ?? p.alt}
+      class={className}
+      loading={priority ? 'eager' : 'lazy'}
+      decoding={priority ? 'sync' : 'async'}
+      fetchpriority={priority ? 'high' : undefined}
+    />
+  )
+}

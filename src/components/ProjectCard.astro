@@ -1,0 +1,25 @@
+---
+import Img from './Img.astro';
+import { url } from '../lib/url';
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  ratio?: number;
+  headingLevel?: 'h2' | 'h3';
+}
+const { project, ratio = 0.68, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+<a href={url(`/portfolio/${project.slug}/`)} class="group block">
+  <div class="overflow-hidden rounded-md bg-sand">
+    <Img name={project.hero} ratio={ratio} max={960} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="zoom-img h-auto w-full object-cover" />
+  </div>
+  <div class="mt-4 flex items-start justify-between gap-4">
+    <div>
+      <Heading class="text-2xl group-hover:text-brass-dark">{project.title}</Heading>
+      <p class="mt-1 text-sm text-muted">{project.label} · {project.location}</p>
+    </div>
+    <span class="mt-1 shrink-0 rounded-full border border-primary/20 px-3 py-1 text-xs font-medium text-primary">{project.category}</span>
+  </div>
+</a>

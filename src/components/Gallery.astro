@@ -1,0 +1,114 @@
+---
+// Photo gallery with a full-screen lightbox (keyboard and swipe friendly).
+import Img from './Img.astro';
+import Icon from './Icon.astro';
+import { photos, type PhotoKey } from '../data/photos';
+
+interface Props {
+  items: PhotoKey[];
+  title: string;
+}
+const { items, title } = Astro.props;
+---
+<div data-gallery>
+  <ul class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+    {
+      items.map((key, i) => (
+        <li class:list={[i === 0 && 'col-span-2 lg:row-span-2']}>
+          <button
+            type="button"
+            class="group relative block h-full w-full overflow-hidden rounded-md bg-sand"
+            data-index={i}
+            data-full={`https://images.unsplash.com/photo-${photos[key].id}?auto=format&fit=max&w=1600&h=1100&q=60`}
+            data-alt={photos[key].alt}
+          >
+            <Img
+              name={key}
+              ratio={i === 0 ? 0.75 : 0.75}
+              max={i === 0 ? 1280 : 640}
+              sizes={i === 0 ? '(min-width: 1024px) 66vw, 100vw' : '(min-width: 1024px) 33vw, 50vw'}
+              class="zoom-img h-full w-full object-cover"
+            />
+            <span class="absolute right-3 bottom-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-primary opacity-90 sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100">
+              <Icon name="zoom" />
+            </span>
+            <span class="sr-only">Open photo {i + 1} of {items.length} full screen</span>
+          </button>
+        </li>
+      ))
+    }
+  </ul>
+
+  <dialog class="lightbox m-0 h-full max-h-none w-full max-w-none bg-transparent p-0" aria-label={`${title} photos`}>
+    <div class="flex h-full w-full flex-col text-white">
+      <div class="flex items-center justify-between px-4 py-3">
+        <p class="text-sm text-white/80" data-counter aria-live="polite"></p>
+        <button type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full hover:bg-white/10" data-close>
+          <Icon name="close" class="h-7 w-7" label="Close" />
+        </button>
+      </div>
+      <div class="relative flex min-h-0 flex-1 items-center justify-center px-2 sm:px-16" data-stage>
+        <img class="max-h-full max-w-full rounded object-contain" alt="" data-image />
+        <button type="button" class="absolute left-2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-black/40 hover:bg-black/60 sm:left-4" data-prev>
+          <Icon name="arrowLeft" class="h-6 w-6" label="Previous photo" />
+        </button>
+        <button type="button" class="absolute right-2 inline-flex h-12 w-12 items-center justify-center rounded-full bg-black/40 hover:bg-black/60 sm:right-4" data-next>
+          <Icon name="arrowRight" class="h-6 w-6" label="Next photo" />
+        </button>
+      </div>
+      <p class="px-4 py-4 text-center text-sm text-white/85" data-caption></p>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+    const buttons = Array.from(gallery.querySelectorAll<HTMLButtonElement>('button[data-full]'));
+    const dialog = gallery.querySelector<HTMLDialogElement>('dialog')!;
+    const image = dialog.querySelector<HTMLImageElement>('[data-image]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-caption]')!;
+    const counter = dialog.querySelector<HTMLElement>('[data-counter]')!;
+    let index = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      index = (i + buttons.length) % buttons.length;
+      const b = buttons[index];
+      image.src = b.dataset.full!;
+      image.alt = b.dataset.alt!;
+      caption.textContent = b.dataset.alt!;
+      counter.textContent = `${index + 1} / ${buttons.length}`;
+    };
+
+    buttons.forEach((b, i) =>
+      b.addEventListener('click', () => {
+        opener = b;
+        show(i);
+        dialog.showModal();
+        document.body.style.overflow = 'hidden';
+      }),
+    );
+    dialog.addEventListener('close', () => {
+      document.body.style.overflow = '';
+      opener?.focus();
+    });
+    dialog.querySelector('[data-close]')!.addEventListener('click', () => dialog.close());
+    dialog.querySelector('[data-prev]')!.addEventListener('click', () => show(index - 1));
+    dialog.querySelector('[data-next]')!.addEventListener('click', () => show(index + 1));
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(index - 1);
+      if (e.key === 'ArrowRight') show(index + 1);
+    });
+    // Click on the dark area closes; swipe left/right changes photo
+    const stage = dialog.querySelector<HTMLElement>('[data-stage]')!;
+    stage.addEventListener('click', (e) => {
+      if (e.target === stage) dialog.close();
+    });
+    let startX = 0;
+    stage.addEventListener('pointerdown', (e) => (startX = e.clientX));
+    stage.addEventListener('pointerup', (e) => {
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+    });
+  });
+</script>

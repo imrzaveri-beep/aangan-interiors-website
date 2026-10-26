@@ -1,0 +1,39 @@
+---
+// Before/after comparison: drag the handle (or use the arrow keys).
+import Img from './Img.astro';
+import { photos, type PhotoKey } from '../data/photos';
+
+interface Props {
+  before: PhotoKey;
+  after: PhotoKey;
+  label: string;
+}
+const { before, after, label } = Astro.props;
+---
+<div class="ba relative aspect-[4/3] w-full overflow-hidden rounded-md bg-sand select-none sm:aspect-[16/9]" data-ba>
+  <Img name={after} ratio={0.5625} max={1600} sizes="(min-width: 1280px) 1200px, 100vw" class="absolute inset-0 h-full w-full object-cover" alt={`After: ${photos[after].alt}`} />
+  <div class="ba-before absolute inset-0">
+    <Img name={before} ratio={0.5625} max={1600} sizes="(min-width: 1280px) 1200px, 100vw" class="absolute inset-0 h-full w-full object-cover" alt={`Before: ${photos[before].alt}`} />
+  </div>
+  <span class="absolute top-4 left-4 rounded-full bg-ink/75 px-3 py-1 text-xs font-semibold tracking-[0.2em] text-white uppercase">Before</span>
+  <span class="absolute top-4 right-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold tracking-[0.2em] text-primary uppercase">After</span>
+  <div class="ba-handle pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-white shadow-[0_0_0_1px_rgba(0,0,0,0.15)]">
+    <span class="absolute top-1/2 left-1/2 flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white text-primary shadow-lg">
+      <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6"></path></svg>
+    </span>
+  </div>
+  <input type="range" min="0" max="100" value="50" step="1" aria-label={label} class="absolute inset-0 h-full w-full" />
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ba]').forEach((el) => {
+    const input = el.querySelector<HTMLInputElement>('input[type="range"]');
+    if (!input) return;
+    const update = () => {
+      el.style.setProperty('--pos', `${input.value}%`);
+      input.setAttribute('aria-valuetext', `${input.value}% before, ${100 - Number(input.value)}% after`);
+    };
+    input.addEventListener('input', update);
+    update();
+  });
+</script>

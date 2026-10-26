@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { business, mailLink } from '../config';
+---
+<Base
+  title="Privacy Policy"
+  description="How Aangan Interiors collects, uses and protects the personal details you share through our website, WhatsApp and phone, in line with India’s DPDP Act, 2023."
+>
+  <PageHero eyebrow="Legal" title="Privacy Policy" intro="Last updated: 26 October 2026" />
+
+  <section class="container-x pb-20 sm:pb-28" aria-label="Privacy policy">
+    <div class="prose-brand max-w-3xl">
+      <p>
+        {business.name} (“we”, “us”) respects your privacy. This policy explains what personal data we collect through this website, why we collect it and how you can control it. It follows India’s Digital Personal Data Protection Act, 2023 (DPDP Act).
+      </p>
+
+      <h3>1. What we collect</h3>
+      <ul>
+        <li><strong>Site visit form:</strong> your name, phone number, email, city, property type, BHK or size, budget range, preferred visit date and message.</li>
+        <li><strong>Callback form:</strong> your name and phone number.</li>
+        <li><strong>WhatsApp and phone:</strong> the details you choose to share when you message or call us.</li>
+        <li><strong>Website usage:</strong> if analytics are switched on, anonymous data such as pages visited, device type and approximate location, collected through cookies.</li>
+      </ul>
+      <p>We never ask for passwords, card numbers, Aadhaar or PAN through this website.</p>
+
+      <h3>2. Why we use it</h3>
+      <ul>
+        <li>To contact you about your enquiry and arrange your site visit.</li>
+        <li>To prepare designs and quotations you ask for.</li>
+        <li>To understand which pages are useful and improve the website.</li>
+      </ul>
+      <p>We use your details only for these purposes, with your consent, which you give by submitting a form or contacting us. We do not sell your data.</p>
+
+      <h3>3. Who we share it with</h3>
+      <ul>
+        <li><strong>Formspree</strong>, which delivers website form submissions to our email inbox.</li>
+        <li><strong>WhatsApp (Meta)</strong>, when you choose to message us there.</li>
+        <li><strong>Google</strong> (Google Maps and, if switched on, Google Analytics) and <strong>Meta</strong> (if the Meta Pixel is switched on), which may set cookies when you use this site.</li>
+      </ul>
+      <p>These services process data under their own privacy policies. We may also share data when the law requires it.</p>
+
+      <h3>4. How long we keep it</h3>
+      <p>We keep enquiry details for up to 24 months after our last conversation, or longer if you become a client and the law requires us to keep records (for example, for invoices and warranty). After that we delete them.</p>
+
+      <h3>5. Your rights</h3>
+      <p>
+        You can ask us to see, correct or delete your personal data, or withdraw your consent at any time, by writing to <a href={mailLink} class="font-medium text-primary underline underline-offset-2">{business.email}</a>. We will reply within 30 days. You can also raise a complaint with the Data Protection Board of India.
+      </p>
+
+      <h3>6. Cookies</h3>
+      <p>You can block or delete cookies in your browser settings. The website will still work, but analytics will not count your visit.</p>
+
+      <h3>7. Security</h3>
+      <p>We take reasonable steps to protect your data. This website is served over HTTPS and does not store form data itself.</p>
+
+      <h3>8. Contact (grievance officer)</h3>
+      <p>
+        {business.name}, {business.addressOneLine}. Email: <a href={mailLink} class="font-medium text-primary underline underline-offset-2">{business.email}</a>, phone: {business.phoneDisplay}.
+      </p>
+
+      <h3>9. Changes</h3>
+      <p>We may update this policy. The date at the top shows the latest version.</p>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

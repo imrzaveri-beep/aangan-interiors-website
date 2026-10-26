@@ -1,0 +1,152 @@
+---
+// One page per project: hero, facts, story, gallery, before/after, client quote.
+import Base from '../../layouts/Base.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import Gallery from '../../components/Gallery.astro';
+import BeforeAfter from '../../components/BeforeAfter.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { url } from '../../lib/url';
+import { whatsappLink } from '../../config';
+import { projects, type Project } from '../../data/projects';
+import { servicePageBySlug } from '../../data/services';
+
+export function getStaticPaths() {
+  return projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: {
+      project,
+      prev: projects[(i - 1 + projects.length) % projects.length],
+      next: projects[(i + 1) % projects.length],
+    },
+  }));
+}
+
+const { project, prev, next } = Astro.props as { project: Project; prev: Project; next: Project };
+const service = servicePageBySlug(project.service)!;
+const facts = [
+  { label: 'Location', value: project.location },
+  { label: 'Size', value: project.size },
+  { label: 'Timeline', value: project.timeline },
+  { label: 'Budget', value: project.budget },
+];
+const breadcrumbs = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: new URL(url('/'), Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Portfolio', item: new URL(url('/portfolio/'), Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: project.title },
+  ],
+};
+---
+<Base
+  title={`${project.title}: ${project.label} in ${project.location.split(',')[0]}`}
+  description={`${project.summary} ${project.size}, ${project.timeline}, ${project.budget}. Interior design by Aangan Interiors, ${project.location}.`}
+  image={project.hero}
+  schema={[breadcrumbs]}
+>
+  <!-- Hero -->
+  <section class="relative isolate flex min-h-[380px] items-end overflow-hidden bg-primary sm:min-h-[520px] lg:min-h-[600px]">
+    <Img name={project.hero} ratio={0.45} mobileRatio={1.05} max={1920} sizes="100vw" priority class="absolute inset-0 -z-10 h-full w-full object-cover" />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-ink/80 via-ink/30 to-transparent"></div>
+    <div class="container-x on-dark py-12 sm:py-16">
+      <nav aria-label="Breadcrumb" class="text-sm text-white/85">
+        <a href={url('/portfolio/')} class="underline-offset-4 hover:underline">Portfolio</a>
+        <span aria-hidden="true"> / </span>
+        <span>{project.category}</span>
+      </nav>
+      <h1 class="mt-3 text-5xl text-white sm:text-6xl lg:text-7xl">{project.title}</h1>
+      <p class="mt-3 text-lg text-white/90">{project.label} · {project.location}</p>
+    </div>
+  </section>
+
+  <!-- Facts row -->
+  <section class="border-b border-primary/10 bg-ivory" aria-label="Project facts">
+    <dl class="container-x grid grid-cols-2 gap-x-6 gap-y-6 py-10 lg:grid-cols-4">
+      {
+        facts.map((f) => (
+          <div class="flex flex-col">
+            <dt class="text-xs font-semibold tracking-[0.25em] text-brass-dark uppercase">{f.label}</dt>
+            <dd class="mt-2 text-lg text-ink">{f.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <!-- Story -->
+  <section class="container-x grid gap-10 py-16 sm:py-24 lg:grid-cols-12" aria-labelledby="story-heading">
+    <div class="lg:col-span-4">
+      <p class="eyebrow">The story</p>
+      <h2 id="story-heading" class="mt-3 text-4xl sm:text-5xl">{project.summary}</h2>
+    </div>
+    <div class="prose-brand reveal lg:col-span-7 lg:col-start-6">
+      {project.story.map((p) => <p>{p}</p>)}
+      <p class="text-base!">
+        Service: <a href={url(`/services/${service.slug}/`)} class="font-semibold text-primary underline decoration-brass decoration-2 underline-offset-4">{service.title}</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="container-x pb-16 sm:pb-24" aria-labelledby="gallery-heading">
+    <h2 id="gallery-heading" class="text-4xl">Gallery</h2>
+    <p class="mt-2 text-muted">Tap a photo to see it full screen.</p>
+    <div class="mt-8">
+      <Gallery items={project.gallery} title={project.title} />
+    </div>
+  </section>
+
+  <!-- Before / after -->
+  <section class="bg-white py-16 sm:py-24" aria-labelledby="ba-heading">
+    <div class="container-x">
+      <h2 id="ba-heading" class="text-4xl">Before / After</h2>
+      <p class="mt-2 text-muted">Drag the handle, or use the arrow keys, to compare.</p>
+      <div class="reveal mt-8">
+        <BeforeAfter before={project.before} after={project.after} label={`Compare ${project.title} before and after`} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Client quote -->
+  {
+    project.quote && (
+      <section class="container-x py-16 text-center sm:py-24" aria-label="Client quote">
+        <figure class="reveal mx-auto max-w-3xl">
+          <span class="block h-12 font-serif text-8xl leading-none text-brass-dark" aria-hidden="true">“</span>
+          <blockquote class="mt-6 font-serif text-3xl leading-snug font-semibold text-primary sm:text-4xl">“{project.quote.text}”</blockquote>
+          <figcaption class="mt-6 text-muted">{project.quote.author}</figcaption>
+        </figure>
+      </section>
+    )
+  }
+
+  <!-- Want something similar + next/previous -->
+  <section class="container-x pb-16 sm:pb-24" aria-label="More projects">
+    <div class:list={['flex flex-col items-start justify-between gap-6 rounded-md bg-sand p-8 sm:flex-row sm:items-center sm:p-10', !project.quote && 'mt-16 sm:mt-24']}>
+      <p class="font-serif text-3xl font-semibold text-primary">Want a space like this?</p>
+      <a href={whatsappLink(`Hi Aangan, I liked the ${project.title} project and want a free consultation.`)} target="_blank" rel="noopener" class="btn-primary">
+        <Icon name="whatsapp" /> Book free consultation
+      </a>
+    </div>
+    <nav class="mt-10 grid gap-4 sm:grid-cols-2" aria-label="Previous and next project">
+      <a href={url(`/portfolio/${prev.slug}/`)} class="group flex items-center gap-4 rounded-md border border-primary/15 p-4 hover:border-primary">
+        <Icon name="arrowLeft" class="h-6 w-6 shrink-0 text-brass-dark" />
+        <span>
+          <span class="block text-xs font-semibold tracking-[0.2em] text-muted uppercase">Previous project</span>
+          <span class="font-serif text-2xl font-semibold text-primary">{prev.title}</span>
+        </span>
+      </a>
+      <a href={url(`/portfolio/${next.slug}/`)} class="group flex items-center justify-end gap-4 rounded-md border border-primary/15 p-4 text-right hover:border-primary">
+        <span>
+          <span class="block text-xs font-semibold tracking-[0.2em] text-muted uppercase">Next project</span>
+          <span class="font-serif text-2xl font-semibold text-primary">{next.title}</span>
+        </span>
+        <Icon name="arrowRight" class="h-6 w-6 shrink-0 text-brass-dark" />
+      </a>
+    </nav>
+  </section>
+
+  <CtaBand />
+</Base>

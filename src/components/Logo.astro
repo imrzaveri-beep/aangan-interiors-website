@@ -1,0 +1,18 @@
+---
+// The client's logo (courtyard arch + AANGAN wordmark).
+// variant "dark" for light backgrounds, "light" (white version) for dark backgrounds.
+import { url } from '../lib/url';
+
+interface Props {
+  variant?: 'dark' | 'light';
+  class?: string;
+}
+const { variant = 'dark', class: className = '' } = Astro.props;
+---
+<img
+  src={url(variant === 'light' ? '/brand/logo-light.svg' : '/brand/logo-dark.svg')}
+  alt="Aangan Interiors"
+  width="556"
+  height="132"
+  class={className}
+/>

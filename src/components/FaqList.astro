@@ -1,0 +1,22 @@
+---
+// Accordion of questions and answers.
+import Icon from './Icon.astro';
+
+interface Props {
+  items: { q: string; a: string }[];
+}
+const { items } = Astro.props;
+---
+<div class="divide-y divide-primary/15 border-y border-primary/15">
+  {
+    items.map((f) => (
+      <details class="group">
+        <summary class="flex min-h-14 cursor-pointer items-center justify-between gap-6 py-5 font-serif text-xl font-semibold text-primary sm:text-2xl">
+          {f.q}
+          <Icon name="plus" class="faq-icon h-6 w-6 shrink-0 text-brass-dark transition-transform duration-200" />
+        </summary>
+        <p class="pb-6 text-lg leading-relaxed text-muted">{f.a}</p>
+      </details>
+    ))
+  }
+</div>

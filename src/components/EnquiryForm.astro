@@ -1,0 +1,125 @@
+---
+// "Book a site visit" form. Sends to email through Formspree, or opens WhatsApp
+// with the same details pre-filled.
+import Icon from './Icon.astro';
+import { integrations, isPlaceholder } from '../config';
+import { url } from '../lib/url';
+
+const demo = isPlaceholder(integrations.formspreeFormId);
+const action = `https://formspree.io/f/${integrations.formspreeFormId}`;
+const today = new Date(Date.now() + 5.5 * 3600 * 1000).toISOString().slice(0, 10);
+---
+<div class="rounded-lg bg-white p-6 shadow-[0_20px_60px_-30px_rgba(47,62,70,0.35)] sm:p-10">
+  <form
+    action={action}
+    method="POST"
+    data-enquiry
+    data-demo={demo ? 'true' : 'false'}
+    data-whatsapp-intro="Hi Aangan, I want to book a free site visit."
+    class="grid gap-5 sm:grid-cols-2"
+  >
+    <input type="hidden" name="_subject" value="New site visit request: Aangan Interiors website" />
+    <input type="hidden" name="form" value="Book a site visit" />
+    <div class="hidden" aria-hidden="true">
+      <label>Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" /></label>
+    </div>
+
+    <div>
+      <label for="ef-name" class="field-label">Name <span class="text-brass-dark" aria-hidden="true">*</span></label>
+      <input id="ef-name" name="name" type="text" class="field" autocomplete="name" required maxlength="80" data-wa-label="Name" />
+    </div>
+    <div>
+      <label for="ef-phone" class="field-label">Phone <span class="text-brass-dark" aria-hidden="true">*</span></label>
+      <input
+        id="ef-phone"
+        name="phone"
+        type="tel"
+        class="field"
+        autocomplete="tel"
+        inputmode="tel"
+        required
+        pattern="[0-9 +\-]{10,16}"
+        title="Please enter a 10-digit mobile number"
+        placeholder="98250 41122"
+        data-wa-label="Phone"
+      />
+    </div>
+    <div>
+      <label for="ef-email" class="field-label">Email</label>
+      <input id="ef-email" name="email" type="email" class="field" autocomplete="email" maxlength="120" data-wa-label="Email" />
+    </div>
+    <div>
+      <label for="ef-city" class="field-label">City</label>
+      <select id="ef-city" name="city" class="field" data-wa-label="City">
+        <option value="">Choose your city</option>
+        <option>Ahmedabad</option>
+        <option>Gandhinagar</option>
+        <option>Vadodara</option>
+        <option>Elsewhere in Gujarat</option>
+        <option>Outside India (NRI)</option>
+      </select>
+    </div>
+    <div>
+      <label for="ef-type" class="field-label">Property type</label>
+      <select id="ef-type" name="property_type" class="field" data-wa-label="Property type">
+        <option value="">Choose one</option>
+        <option>Apartment</option>
+        <option>Bungalow</option>
+        <option>Office</option>
+        <option>Café</option>
+      </select>
+    </div>
+    <div>
+      <label for="ef-size" class="field-label">BHK / size</label>
+      <input id="ef-size" name="size" type="text" class="field" maxlength="60" placeholder="e.g. 3BHK, 1,800 sq ft" data-wa-label="BHK / size" />
+    </div>
+    <div>
+      <label for="ef-budget" class="field-label">Budget range</label>
+      <select id="ef-budget" name="budget" class="field" data-wa-label="Budget">
+        <option value="">Choose a range</option>
+        <option>Under ₹8 lakh</option>
+        <option>₹8–15 lakh</option>
+        <option>₹15–25 lakh</option>
+        <option>₹25–40 lakh</option>
+        <option>₹40–60 lakh</option>
+        <option>Above ₹60 lakh</option>
+        <option>Not sure yet</option>
+      </select>
+    </div>
+    <div>
+      <label for="ef-date" class="field-label">Preferred visit date</label>
+      <input id="ef-date" name="visit_date" type="date" class="field" min={today} data-wa-label="Preferred visit date" />
+    </div>
+    <div class="sm:col-span-2">
+      <label for="ef-message" class="field-label">Message</label>
+      <textarea id="ef-message" name="message" rows="4" class="field" maxlength="1500" placeholder="Tell us a little about your home and what you have in mind." data-wa-label="Message"></textarea>
+    </div>
+
+    <p class="text-sm leading-relaxed text-muted sm:col-span-2">
+      We use your details only to contact you about this enquiry. Read our <a href={url('/privacy-policy/')} class="font-medium text-primary underline underline-offset-2">Privacy Policy</a>.
+    </p>
+
+    <div class="flex flex-col gap-3 sm:col-span-2 sm:flex-row">
+      <button type="submit" class="btn-primary" data-submit>Book my free site visit</button>
+      <button type="button" class="btn-outline" data-wa-send><Icon name="whatsapp" /> Send on WhatsApp instead</button>
+    </div>
+    <p class="text-sm text-red-800 sm:col-span-2" role="alert" data-error hidden></p>
+  </form>
+
+  <div data-thanks hidden tabindex="-1" class="py-6 text-center outline-none">
+    <div class="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-brass/25 text-primary">
+      <Icon name="check" class="h-7 w-7" />
+    </div>
+    <h3 class="text-3xl">Thank you<span data-thanks-name></span>!</h3>
+    <p class="mx-auto mt-3 max-w-md text-muted">
+      We have your request. Our team will call you within one working day to fix your free site visit.
+    </p>
+    {
+      demo && (
+        <p class="mx-auto mt-4 max-w-md rounded-md bg-sand px-4 py-3 text-sm text-ink">
+          Demo mode: this form is not connected to email yet, so nothing was sent. Please use “Send on WhatsApp” for now.
+        </p>
+      )
+    }
+  </div>
+</div>

@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import StatsStrip from '../components/StatsStrip.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import ProcessSteps from '../components/ProcessSteps.astro';
+import TestimonialCarousel from '../components/TestimonialCarousel.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { photo, photoSrcset, url } from '../lib/url';
+import { photos } from '../data/photos';
+import { business, whatsappLink } from '../config';
+import { featuredProjects, projectBySlug } from '../data/projects';
+import { faqs, featuredIn } from '../data/content';
+import type { PhotoKey } from '../data/photos';
+
+const shah = projectBySlug('the-shah-residence')!;
+
+// Hero photo: square crop for phones, wide crop for larger screens
+const heroMobile = photoSrcset(photos.heroLiving.id, 800, 1);
+const heroDesktop = [960, 1280, 1600, 1920].map((w) => `${photo(photos.heroLiving.id, w, 0.55)} ${w}w`).join(', ');
+
+const serviceCards: { title: string; text: string; price: string; href: string; photo: PhotoKey }[] = [
+  {
+    title: 'Residential',
+    text: '2, 3 and 4 BHK apartments, bungalows and villas, designed around your family.',
+    price: '2BHK from ₹8 lakh',
+    href: '/services/residential-interiors/',
+    photo: 'livingIvory',
+  },
+  {
+    title: 'Commercial',
+    text: 'Offices, co-working spaces, clinics and cafés that work hard every day.',
+    price: 'From ₹1,800 per sq ft',
+    href: '/services/commercial-interiors/',
+    photo: 'cafeIndustrial',
+  },
+  {
+    title: 'Kitchens & Wardrobes',
+    text: 'Modular kitchens and wardrobes made in our own factory, with a 10-year warranty.',
+    price: 'Kitchens from ₹2.5 lakh',
+    href: '/services/modular-kitchens-wardrobes/',
+    photo: 'kitchenIsland',
+  },
+];
+---
+<Base
+  title="Interior Designer in Ahmedabad | Aangan Interiors: Homes that feel like you"
+  description="Aangan Interiors is a boutique interior design studio in Ahmedabad since 2014: turnkey apartments, bungalows, modular kitchens, offices and cafés. Free site visit, 3D design, fixed quote."
+>
+  <link slot="head" rel="preload" as="image" fetchpriority="high" media="(max-width: 767px)" imagesrcset={heroMobile} imagesizes="100vw" />
+  <link slot="head" rel="preload" as="image" fetchpriority="high" media="(min-width: 768px)" imagesrcset={heroDesktop} imagesizes="100vw" />
+
+  <!-- Hero -->
+  <section class="relative" aria-labelledby="hero-heading">
+    <div class="relative h-[54vh] min-h-[320px] overflow-hidden bg-primary sm:h-[66vh] lg:h-[calc(100vh-72px)] lg:max-h-[820px] lg:min-h-[600px]">
+      <picture>
+        <source media="(min-width: 768px)" srcset={heroDesktop} sizes="100vw" />
+        <img
+          src={photo(photos.heroLiving.id, 800, 1)}
+          srcset={heroMobile}
+          sizes="100vw"
+          alt={photos.heroLiving.alt}
+          width="800"
+          height="800"
+          fetchpriority="high"
+          decoding="sync"
+          class="absolute inset-0 h-full w-full object-cover"
+        />
+      </picture>
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/35 to-transparent lg:bg-gradient-to-r lg:from-ink/30"></div>
+    </div>
+    <div class="container-x relative -mt-20 sm:-mt-28 lg:absolute lg:inset-x-0 lg:bottom-20 lg:mt-0">
+      <div class="max-w-2xl bg-ivory p-7 shadow-[0_30px_80px_-40px_rgba(27,27,27,0.6)] sm:p-12">
+        <p class="eyebrow">Interior design studio · Ahmedabad</p>
+        <h1 id="hero-heading" class="mt-4 text-5xl leading-[1.02] sm:text-6xl lg:text-7xl">
+          Homes that feel <span class="text-brass-dark italic">like you.</span>
+        </h1>
+        <p class="mt-5 text-lg text-ink/85">{business.tagline}</p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-primary"><Icon name="whatsapp" /> Book free consultation</a>
+          <a href={url('/portfolio/')} class="btn-outline">View portfolio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="container-x py-14 sm:py-20" aria-label="Aangan Interiors in numbers">
+    <StatsStrip />
+  </section>
+
+  <!-- Services -->
+  <section class="bg-sand py-20 sm:py-28" aria-labelledby="services-heading">
+    <div class="container-x">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <SectionHeading id="services-heading" eyebrow="What we do" title="Turnkey interiors, start to finish" text="One team for design, factory-made woodwork and on-site execution, with one fixed quotation." />
+        <a href={url('/services/')} class="link-arrow reveal shrink-0">All services & prices <Icon name="arrowRight" class="h-4 w-4" /></a>
+      </div>
+      <ul class="mt-12 grid gap-8 md:grid-cols-3">
+        {
+          serviceCards.map((s) => (
+            <li class="reveal">
+              <a href={url(s.href)} class="group flex h-full flex-col overflow-hidden rounded-md bg-white">
+                <div class="overflow-hidden">
+                  <Img name={s.photo} ratio={0.72} max={800} sizes="(min-width: 768px) 33vw, 100vw" class="zoom-img h-auto w-full object-cover" />
+                </div>
+                <div class="flex flex-1 flex-col p-7">
+                  <h3 class="text-3xl group-hover:text-brass-dark">{s.title}</h3>
+                  <p class="mt-3 flex-1 leading-relaxed text-muted">{s.text}</p>
+                  <p class="mt-5 flex items-center justify-between border-t border-primary/10 pt-4 text-sm font-semibold text-primary">
+                    {s.price}
+                    <Icon name="arrowRight" class="h-5 w-5 text-brass-dark transition-transform group-hover:translate-x-1" />
+                  </p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Featured projects -->
+  <section class="container-x py-20 sm:py-28" aria-labelledby="projects-heading">
+    <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <SectionHeading id="projects-heading" eyebrow="Featured projects" title="Homes and spaces we have loved building" />
+      <a href={url('/portfolio/')} class="link-arrow reveal shrink-0">See all 120+ projects <Icon name="arrowRight" class="h-4 w-4" /></a>
+    </div>
+    <ul class="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        featuredProjects.map((p) => (
+          <li class="reveal">
+            <ProjectCard project={p} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Before / after -->
+  <section class="bg-white py-20 sm:py-28" aria-labelledby="ba-heading">
+    <div class="container-x grid items-center gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-4">
+        <SectionHeading id="ba-heading" eyebrow="Before / After" title="From bare walls to a home" text={`${shah.title}, ${shah.location}: a ${shah.size.split('·')[1]?.trim() ?? ''} handed over in ${shah.timeline}. Drag the handle to compare.`} />
+        <a href={url(`/portfolio/${shah.slug}/`)} class="link-arrow reveal mt-6">See the full project <Icon name="arrowRight" class="h-4 w-4" /></a>
+      </div>
+      <div class="reveal lg:col-span-8">
+        <BeforeAfter before={shah.before} after={shah.after} label={`Compare ${shah.title} before and after`} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="container-x py-20 sm:py-28" aria-labelledby="process-heading">
+    <SectionHeading id="process-heading" eyebrow="Our process" title="Five steps, about 45 days" text="A clear plan from the first visit to the day you get your keys." />
+    <div class="mt-14">
+      <ProcessSteps />
+    </div>
+    <a href={url('/process/')} class="link-arrow reveal mt-10">How we work <Icon name="arrowRight" class="h-4 w-4" /></a>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="bg-sand py-20 sm:py-28" aria-labelledby="reviews-heading">
+    <div class="container-x">
+      <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+        <SectionHeading id="reviews-heading" eyebrow="Kind words" title="Families who trusted us with their homes" />
+        <a href={url('/testimonials/')} class="reveal flex shrink-0 items-center gap-3 rounded-full bg-white px-5 py-3 text-sm text-primary">
+          <span class="font-serif text-2xl font-semibold">{business.googleRating}</span>
+          <Icon name="star" class="h-5 w-5 text-brass-dark" />
+          <span>from {business.googleReviewCount} Google reviews</span>
+        </a>
+      </div>
+      <div class="reveal mt-12">
+        <TestimonialCarousel />
+      </div>
+    </div>
+  </section>
+
+  <!-- As featured in -->
+  <section class="border-y border-primary/10 py-12" aria-labelledby="press-heading">
+    <div class="container-x">
+      <h2 id="press-heading" class="text-center font-sans text-xs font-semibold tracking-[0.25em] text-muted uppercase">As featured in</h2>
+      <ul class="mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 text-primary/90">
+        {
+          featuredIn.map((name, i) => (
+            <li
+              class:list={[
+                'whitespace-nowrap',
+                i % 3 === 0 && 'font-serif text-2xl font-semibold italic',
+                i % 3 === 1 && 'font-sans text-sm font-semibold tracking-[0.3em] uppercase',
+                i % 3 === 2 && 'font-serif text-xl tracking-wide uppercase',
+              ]}
+            >
+              {name}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ teaser -->
+  <section class="container-x grid gap-12 py-20 sm:py-28 lg:grid-cols-12" aria-labelledby="faq-heading">
+    <div class="lg:col-span-4">
+      <SectionHeading id="faq-heading" eyebrow="Questions" title="Good to know" text="Straight answers about cost, time and warranty." />
+      <a href={url('/faqs/')} class="link-arrow reveal mt-6">All FAQs <Icon name="arrowRight" class="h-4 w-4" /></a>
+    </div>
+    <div class="reveal lg:col-span-8">
+      <FaqList items={faqs.slice(0, 4)} />
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

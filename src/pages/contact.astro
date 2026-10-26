@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import EnquiryForm from '../components/EnquiryForm.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { business, mailLink, telLink, whatsappLink } from '../config';
+---
+<Base
+  title="Contact & Book a Free Site Visit"
+  description="Book a free site visit with Aangan Interiors, Prahlad Nagar, Ahmedabad. Call or WhatsApp +91 98250 41122, email hello@aanganinteriors.in. Open Mon–Sat 10:30 am – 7:30 pm."
+  image="livingSoft"
+>
+  <PageHero
+    eyebrow="Contact"
+    title="Book a free site visit"
+    intro="Tell us about your home. We will call you within one working day to fix a time. The first visit is free within Ahmedabad and Gandhinagar."
+  />
+
+  <section class="container-x grid gap-12 pb-20 sm:pb-28 lg:grid-cols-12" aria-label="Contact options">
+    <div id="book" class="lg:col-span-7">
+      <h2 class="sr-only">Site visit request form</h2>
+      <EnquiryForm />
+    </div>
+
+    <aside class="space-y-8 lg:col-span-5">
+      <div class="grid gap-3 sm:grid-cols-2">
+        <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-primary"><Icon name="whatsapp" /> WhatsApp us</a>
+        <a href={telLink} class="btn-outline"><Icon name="phone" /> Call {business.phoneDisplay}</a>
+      </div>
+
+      <div>
+        <h2 class="text-3xl">Visit our studio</h2>
+        <address class="mt-4 space-y-4 not-italic">
+          <p class="flex gap-3"><Icon name="pin" class="mt-0.5 h-5 w-5 shrink-0 text-brass-dark" />{business.addressOneLine}</p>
+          <p class="flex gap-3"><Icon name="phone" class="mt-0.5 h-5 w-5 shrink-0 text-brass-dark" /><a href={telLink} class="hover:text-brass-dark">{business.phoneDisplay}</a></p>
+          <p class="flex gap-3"><Icon name="mail" class="mt-0.5 h-5 w-5 shrink-0 text-brass-dark" /><a href={mailLink} class="hover:text-brass-dark">{business.email}</a></p>
+        </address>
+      </div>
+
+      <div>
+        <h2 class="text-3xl">Opening hours</h2>
+        <dl class="mt-4 divide-y divide-primary/10 border-y border-primary/10">
+          {
+            business.hours.map((h) => (
+              <div class="flex flex-wrap justify-between gap-x-4 gap-y-1 py-3">
+                <dt class="font-medium">{h.days}</dt>
+                <dd class="text-muted">{h.time}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="mt-3 text-sm text-muted">We serve Ahmedabad, Gandhinagar, Vadodara and all of Gujarat.</p>
+      </div>
+
+      <div class="overflow-hidden rounded-md border border-primary/10 bg-sand">
+        <iframe
+          src={business.mapsEmbed}
+          title="Map showing the Aangan Interiors studio in Prahlad Nagar, Ahmedabad"
+          class="block h-72 w-full border-0"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <a href={business.mapsLink} target="_blank" rel="noopener" class="flex items-center justify-between px-4 py-3 text-sm font-semibold text-primary hover:text-brass-dark">
+          Open in Google Maps <Icon name="arrowRight" class="h-4 w-4" />
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  <CtaBand heading="Prefer to talk?" text="Message us on WhatsApp or call. We are open Monday to Saturday, 10:30 am – 7:30 pm IST." />
+</Base>

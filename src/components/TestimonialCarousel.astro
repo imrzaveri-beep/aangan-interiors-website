@@ -1,0 +1,46 @@
+---
+// Swipeable reviews carousel (no auto-play).
+import Icon from './Icon.astro';
+import { testimonials } from '../data/content';
+---
+<div class="relative" data-carousel>
+  <ul class="carousel -mx-4 flex gap-5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0" aria-label="Client reviews" tabindex="0" data-track>
+    {
+      testimonials.map((t) => (
+        <li class="w-[85%] shrink-0 sm:w-[calc(50%-0.625rem)] lg:w-[calc(33.333%-0.84rem)]">
+          <figure class="flex h-full flex-col rounded-md bg-white p-7 shadow-[0_10px_40px_-25px_rgba(47,62,70,0.4)]">
+            <div class="flex gap-0.5 text-brass-dark" role="img" aria-label="5 out of 5 stars">
+              {Array.from({ length: 5 }).map(() => <Icon name="star" class="h-4 w-4" />)}
+            </div>
+            <blockquote class="mt-4 flex-1 font-serif text-2xl leading-snug text-primary">“{t.text}”</blockquote>
+            <figcaption class="mt-6 text-sm">
+              <span class="font-semibold text-ink">{t.name}</span>
+              <span class="text-muted"> · {t.place}</span>
+            </figcaption>
+          </figure>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="mt-6 flex gap-3">
+    <button type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 text-primary hover:bg-primary hover:text-white" data-prev>
+      <Icon name="arrowLeft" label="Previous reviews" />
+    </button>
+    <button type="button" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 text-primary hover:bg-primary hover:text-white" data-next>
+      <Icon name="arrowRight" label="Next reviews" />
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((c) => {
+    const track = c.querySelector<HTMLElement>('[data-track]')!;
+    const step = () => (track.firstElementChild as HTMLElement | null)?.offsetWidth ?? track.clientWidth;
+    const smooth = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    c.querySelector('[data-prev]')!.addEventListener('click', () => track.scrollBy({ left: -step() - 20, behavior: smooth }));
+    c.querySelector('[data-next]')!.addEventListener('click', () => {
+      const atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+      track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + step() + 20, behavior: smooth });
+    });
+  });
+</script>

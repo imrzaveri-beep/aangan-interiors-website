@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/url';
+import { whatsappLink } from '../config';
+---
+<Base title="Page not found" description="This page could not be found. Explore Aangan Interiors’ portfolio and services, or book a free site visit." noindex>
+  <section class="container-x py-24 text-center sm:py-32">
+    <p class="eyebrow">Error 404</p>
+    <h1 class="mt-4 text-5xl sm:text-7xl">This room is still empty.</h1>
+    <p class="mx-auto mt-5 max-w-xl text-lg text-muted">The page you are looking for has moved or does not exist. Let us take you somewhere better.</p>
+    <div class="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+      <a href={url('/')} class="btn-primary">Go to home page</a>
+      <a href={url('/portfolio/')} class="btn-outline">View portfolio</a>
+      <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-outline"><Icon name="whatsapp" /> WhatsApp us</a>
+    </div>
+  </section>
+</Base>

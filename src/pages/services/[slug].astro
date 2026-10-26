@@ -1,0 +1,123 @@
+---
+// Residential Interiors, Commercial Interiors and Modular Kitchens & Wardrobes.
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { url } from '../../lib/url';
+import { whatsappLink } from '../../config';
+import { servicePages, services, type ServicePage } from '../../data/services';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() {
+  return servicePages.map((page) => ({ params: { slug: page.slug }, props: { page } }));
+}
+
+const { page } = Astro.props as { page: ServicePage };
+const related = [
+  ...projects.filter((p) => p.service === page.slug),
+  ...projects.filter((p) => p.alsoIn?.includes(page.slug)),
+].slice(0, 3);
+const included = services.filter((s) => s.page === page.slug);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: page.title,
+  description: page.metaDescription,
+  areaServed: ['Ahmedabad', 'Gandhinagar', 'Vadodara', 'Gujarat'],
+  provider: { '@type': 'Organization', name: 'Aangan Interiors' },
+};
+---
+<Base title={page.metaTitle} description={page.metaDescription} image={page.photo} schema={[schema]}>
+  <PageHero eyebrow={page.eyebrow} title={page.title} photo={page.photo} />
+
+  <!-- Intro + starting price -->
+  <section class="container-x grid gap-12 py-16 sm:py-24 lg:grid-cols-12" aria-labelledby="intro-heading">
+    <div class="lg:col-span-7">
+      <SectionHeading id="intro-heading" title={page.heading} />
+      <div class="reveal prose-brand mt-6">
+        {page.intro.map((p) => <p>{p}</p>)}
+      </div>
+      <p class="reveal mt-2 text-sm text-muted">
+        Includes: {included.map((s) => s.name).join(' · ')}
+      </p>
+    </div>
+    <aside class="reveal lg:col-span-5" aria-labelledby="price-heading">
+      <div class="on-dark rounded-md bg-primary p-8 text-white sm:p-10">
+        <p class="eyebrow">Starting price</p>
+        <h2 id="price-heading" class="sr-only">Starting prices</h2>
+        <dl class="mt-5 divide-y divide-white/15">
+          {
+            page.prices.map((p) => (
+              <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-4">
+                <dt class="text-white/85">{p.label}</dt>
+                <dd class="font-serif text-2xl font-semibold text-brass">{p.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="mt-4 text-sm leading-relaxed text-white/75">{page.priceNote}</p>
+        <a href={whatsappLink(`Hi Aangan, I want a free consultation for ${page.title.toLowerCase()}.`)} target="_blank" rel="noopener" class="btn-brass mt-6 w-full">
+          <Icon name="whatsapp" /> Book free consultation
+        </a>
+      </div>
+    </aside>
+  </section>
+
+  <!-- What's included -->
+  <section class="bg-sand py-20 sm:py-24" aria-labelledby="included-heading">
+    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
+      <div>
+        <SectionHeading id="included-heading" eyebrow="What’s included" title="Everything, from first sketch to final clean" />
+        <ul class="reveal mt-8 grid gap-3">
+          {
+            page.included.map((item) => (
+              <li class="flex gap-3">
+                <Icon name="check" class="mt-0.5 h-5 w-5 shrink-0 text-brass-dark" />
+                <span class="leading-relaxed">{item}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="reveal overflow-hidden rounded-md">
+        <Img name={related[0]?.hero ?? page.photo} ratio={1.1} max={960} sizes="(min-width: 1024px) 50vw, 100vw" class="h-auto w-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Related projects -->
+  <section class="container-x py-20 sm:py-24" aria-labelledby="related-heading">
+    <div class="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <SectionHeading id="related-heading" eyebrow="Related projects" title="Recently completed" />
+      <a href={url('/portfolio/')} class="link-arrow reveal shrink-0">Full portfolio <Icon name="arrowRight" class="h-4 w-4" /></a>
+    </div>
+    <ul class="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        related.map((p) => (
+          <li class="reveal">
+            <ProjectCard project={p} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- FAQ -->
+  <section class="container-x grid gap-12 pb-20 sm:pb-28 lg:grid-cols-12" aria-labelledby="faq-heading">
+    <div class="lg:col-span-4">
+      <SectionHeading id="faq-heading" eyebrow="FAQ" title={`${page.navTitle}: your questions`} />
+      <a href={url('/faqs/')} class="link-arrow reveal mt-6">All FAQs <Icon name="arrowRight" class="h-4 w-4" /></a>
+    </div>
+    <div class="reveal lg:col-span-8">
+      <FaqList items={page.faqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

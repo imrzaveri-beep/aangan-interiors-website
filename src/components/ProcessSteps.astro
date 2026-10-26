@@ -1,0 +1,39 @@
+---
+// The 5-step process timeline.
+import Icon from './Icon.astro';
+import { processSteps } from '../data/content';
+
+interface Props {
+  detailed?: boolean;
+}
+const { detailed = false } = Astro.props;
+---
+<ol class:list={['relative grid gap-8', detailed ? 'md:grid-cols-1' : 'md:grid-cols-5 md:gap-6']}>
+  {
+    processSteps.map((s, i) => (
+      <li class:list={['reveal relative', detailed ? 'flex gap-6 sm:gap-8' : 'flex gap-5 md:block']}>
+        <div class:list={['relative flex shrink-0 flex-col items-center', !detailed && 'md:flex-row']}>
+          <span class="relative z-10 flex h-14 w-14 items-center justify-center rounded-full border border-brass bg-ivory text-primary">
+            <Icon name={s.icon as 'visit'} class="h-6 w-6" />
+          </span>
+          {i < processSteps.length - 1 && (
+            <span
+              class:list={[
+                'absolute bg-brass/50',
+                detailed ? 'top-14 -bottom-8 left-1/2 w-px' : 'top-14 -bottom-8 left-1/2 w-px md:top-7 md:right-[-1.5rem] md:bottom-auto md:left-14 md:h-px md:w-auto',
+              ]}
+              aria-hidden="true"
+            />
+          )}
+        </div>
+        <div class:list={[!detailed && 'md:mt-5', 'pb-2']}>
+          <p class="text-xs font-semibold tracking-[0.2em] text-brass-dark uppercase">
+            Step {i + 1} · {s.day}
+          </p>
+          <h3 class:list={['mt-2', detailed ? 'text-3xl' : 'text-2xl']}>{s.title}</h3>
+          <p class:list={['mt-2 leading-relaxed text-muted', !detailed && 'text-[0.95rem]']}>{s.text}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>

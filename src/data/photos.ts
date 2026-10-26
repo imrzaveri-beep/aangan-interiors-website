@@ -1,0 +1,61 @@
+// Royalty-free photos from Unsplash (https://unsplash.com/license), used until
+// Aangan's own project photos are ready. Replace an id to change a photo everywhere.
+export interface Photo {
+  id: string;
+  alt: string;
+}
+
+export const photos = {
+  heroLiving: { id: '1618221195710-dd6b41faaea6', alt: 'Warm living room with a grey sofa, terracotta cushions, wooden coffee table and soft daylight' },
+  livingIvory: { id: '1631679706909-1844bbd07221', alt: 'Ivory living room with a curved white sofa, round mirrors and a jute rug' },
+  livingBeige: { id: '1616486338812-3dadae4b4ace', alt: 'Beige living room with an L-shaped sofa, rattan pendant and a round wooden coffee table' },
+  livingWood: { id: '1600210492486-724fe5c67fb0', alt: 'Living room with a tan leather sofa, framed art wall and indoor plants' },
+  livingModern: { id: '1600607687939-ce8a6c25118c', alt: 'Open living area with a white sofa, wooden feature wall and kitchen beyond' },
+  livingSoft: { id: '1583847268964-b28dc8f51f92', alt: 'Calm living corner with a light grey sofa, knitted throw and side table' },
+  livingArches: { id: '1600210491892-03d54c0aaf87', alt: 'Bright double-height living room with arched windows, fireplace and wooden beams' },
+  livingDouble: { id: '1600566753086-00f18fb6b3ea', alt: 'Double-height bungalow living room with a floating staircase and grey sofas' },
+  livingGrey: { id: '1600121848594-d8644e57abab', alt: 'Grey living room with a round coffee table, built-in TV unit and pendant light' },
+  livingTeal: { id: '1615873968403-89e068629265', alt: 'Living room with a deep teal wall, tan sofa and gallery of framed prints' },
+  livingSage: { id: '1616046229478-9901c5536a45', alt: 'Sage green living room with a round mirror, wooden console and plants' },
+  livingBoho: { id: '1615529182904-14819c35db37', alt: 'Cosy living room with cane pendant lights, grey sofa and patterned cushions' },
+  livingCompact: { id: '1502672260266-1c1ef2d93688', alt: 'Compact apartment living room with a grey sofa, open shelves and hanging plants' },
+  livingApartment: { id: '1522708323590-d24dbb6b0267', alt: 'Bright apartment living and dining area with large windows and light furniture' },
+  livingYellow: { id: '1586023492125-27b2c045efd7', alt: 'Minimal reading corner with a mustard armchair, floor lamp and framed art' },
+  diningGreen: { id: '1617806118233-18e1de247200', alt: 'Dining area with green velvet chairs, round mirror and indoor plants' },
+  diningOpen: { id: '1560185007-cde436f6a4d0', alt: 'Open dining and living room with a wooden dining table and bay windows' },
+  bedroomWarm: { id: '1615874959474-d609969a20ed', alt: 'Warm bedroom with layered bedding, orange cushions and a woven pendant light' },
+  bedroomClassic: { id: '1505693416388-ac5ce068fe85', alt: 'Master bedroom with an upholstered headboard, bedside lamps and a bench' },
+  bedroomBold: { id: '1540518614846-7eded433c457', alt: 'Bedroom with a navy and white bed, orange ottomans and large windows' },
+  bedroomGrey: { id: '1600607687644-c7171b42498f', alt: 'Light grey bedroom with a large window, pendant light and accent chair' },
+  bedroomCalm: { id: '1586105251261-72a756497a11', alt: 'Calm bedroom with a dark headboard, line-art frames and brass wall lamp' },
+  kitchenWhite: { id: '1556911220-bff31c812dba', alt: 'White modular kitchen with a marble countertop, open shelves and fresh fruit' },
+  kitchenClassic: { id: '1556912173-3bb406ef7e77', alt: 'Classic white kitchen with shaker cabinets, quartz top and a range hood' },
+  kitchenIsland: { id: '1600585152220-90363fe7e115', alt: 'Modern kitchen with a white island, wooden stools and pendant lights' },
+  kitchenGrey: { id: '1600489000022-c2086d79f9d4', alt: 'Grey and white L-shaped modular kitchen with open shelves and a window' },
+  kitchenLuxe: { id: '1602028915047-37269d1a73f7', alt: 'Large handleless kitchen with a grey island and built-in ovens' },
+  kitchenMarble: { id: '1588854337236-6889d631faa8', alt: 'Dark modular kitchen with marble waterfall counter and wooden floor' },
+  wardrobeTall: { id: '1595428774223-ef52624120d2', alt: 'Tall wooden wardrobe and open shelf unit against a blush wall' },
+  wardrobeDoor: { id: '1558997519-83ea9252edf8', alt: 'Wooden wardrobe with flush sliding doors in a white room' },
+  shelvesWall: { id: '1594026112284-02bb6f3352fe', alt: 'Floating wooden wall shelves and a low TV unit with decor pieces' },
+  bathGrey: { id: '1604709177225-055f99402ea3', alt: 'Grey bathroom with a freestanding tub, round mirror and wooden vanity' },
+  bathMarble: { id: '1564540583246-934409427776', alt: 'Marble bathroom with twin basins, oval mirrors and brass taps' },
+  officeOpen: { id: '1497366811353-6870744d04b2', alt: 'Open-plan office with glass walls, long tables and city views' },
+  officeLounge: { id: '1524758631624-e2822e304c36', alt: 'Office lounge with soft chairs, floor lamp and glass partitions' },
+  officeBare: { id: '1497366216548-37526070297c', alt: 'Empty office floor with a long corridor before fit-out' },
+  cafeBusy: { id: '1554118811-1e0d58224f24', alt: 'Café interior with wooden tables, green plants and a long service counter' },
+  cafeIndustrial: { id: '1521017432531-fbd92d768814', alt: 'Industrial-style café with a high ceiling, shelves and communal tables' },
+  cafeSign: { id: '1501339847302-ac426a4a7cbb', alt: 'Café wall with a lit marquee sign and warm pendant lights' },
+  cafeWindow: { id: '1445116572660-236099ec97a0', alt: 'Café table by large windows with a coffee press and plants' },
+  bungalowNight: { id: '1600585154340-be6161a56a0c', alt: 'Contemporary bungalow at dusk with warm lights and a green lawn' },
+  bungalowModern: { id: '1600047509807-ba8f99d2cdde', alt: 'Modern bungalow exterior with wooden cladding and a lawn' },
+  bungalowWood: { id: '1600566753190-17f0baa2a6c3', alt: 'Bungalow facade with timber, glass and a landscaped front garden' },
+  bungalowPool: { id: '1613490493576-7fde63acd811', alt: 'White villa with a swimming pool and wooden ceiling overhang' },
+  bungalowLawn: { id: '1600585154363-67eb9e2e2099', alt: 'Dark-clad villa with large windows under a tree' },
+  studioDrawing: { id: '1503387762-592deb58ef4e', alt: 'Designer sketching a floor plan on drawing paper' },
+  studioDesk: { id: '1600494603989-9650cf6ddd3d', alt: 'Studio work desk by a green wall with art and plants' },
+  studioChairs: { id: '1551298370-9d3d53740c72', alt: 'Material samples: yellow and sage chairs against a dark wall' },
+  beforeEmpty: { id: '1581858726788-75bc0f6a952d', alt: 'Bare room with wooden floor and plain white walls before the interiors' },
+  beforeSparse: { id: '1513694203232-719a280e022f', alt: 'Sparsely furnished room with a black sofa and plain walls before the redesign' },
+} satisfies Record<string, Photo>;
+
+export type PhotoKey = keyof typeof photos;

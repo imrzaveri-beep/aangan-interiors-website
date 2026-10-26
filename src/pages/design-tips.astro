@@ -1,0 +1,80 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Img from '../components/Img.astro';
+import Icon from '../components/Icon.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { tips } from '../data/tips';
+import { photos } from '../data/photos';
+import { photo, url } from '../lib/url';
+
+const schema = tips.map((t) => ({
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: t.title,
+  description: t.excerpt,
+  image: photo(photos[t.photo].id, 1200, 0.5625),
+  url: new URL(`${url('/design-tips/')}#${t.slug}`, Astro.site).href,
+  author: { '@type': 'Organization', name: 'Aangan Interiors' },
+}));
+---
+<Base
+  title="Design Tips: Storage, Modular Kitchens & Planning Your New Flat"
+  description="Practical interior design tips from Aangan Interiors, Ahmedabad: smart storage for a 2BHK, choosing modular kitchen materials and a 45-day plan for your new flat."
+  image="kitchenClassic"
+  schema={schema}
+>
+  <PageHero eyebrow="Design tips" title="Ideas for a home that works" intro="Practical advice from our designers, based on 120+ homes across Gujarat." />
+
+  <section class="container-x pb-16 sm:pb-20" aria-label="Articles">
+    <ul class="grid gap-8 md:grid-cols-3">
+      {
+        tips.map((t) => (
+          <li class="reveal">
+            <a href={`#${t.slug}`} class="group flex h-full flex-col overflow-hidden rounded-md bg-white">
+              <div class="overflow-hidden">
+                <Img name={t.photo} ratio={0.66} max={800} sizes="(min-width: 768px) 33vw, 100vw" class="zoom-img h-auto w-full object-cover" />
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <p class="text-xs font-semibold tracking-[0.2em] text-brass-dark uppercase">{t.readTime}</p>
+                <h2 class="mt-2 text-2xl group-hover:text-brass-dark">{t.title}</h2>
+                <p class="mt-2 flex-1 text-[0.95rem] leading-relaxed text-muted">{t.excerpt}</p>
+                <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                  Read article <Icon name="arrowRight" class="h-4 w-4" />
+                </span>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    tips.map((t, i) => (
+      <article id={t.slug} class:list={['py-16 sm:py-24', i % 2 === 0 ? 'bg-white' : 'bg-ivory']} aria-labelledby={`${t.slug}-title`}>
+        <div class="container-x grid gap-10 lg:grid-cols-12">
+          <header class="lg:col-span-4">
+            <p class="eyebrow">Article {i + 1} · {t.readTime}</p>
+            <h2 id={`${t.slug}-title`} class="mt-3 text-4xl sm:text-5xl">{t.title}</h2>
+            <div class="mt-8 hidden overflow-hidden rounded-md lg:block">
+              <Img name={t.photo} ratio={1.1} max={640} sizes="30vw" class="h-auto w-full object-cover" />
+            </div>
+          </header>
+          <div class="prose-brand lg:col-span-7 lg:col-start-6">
+            {t.blocks.map((b) =>
+              b.type === 'p' ? <p>{b.text}</p> : b.type === 'h' ? <h3>{b.text}</h3> : (
+                <ul>
+                  {b.items.map((item) => <li>{item}</li>)}
+                </ul>
+              ),
+            )}
+            <a href="#main" class="link-arrow mt-4 text-sm">Back to all articles</a>
+          </div>
+        </div>
+      </article>
+    ))
+  }
+
+  <CtaBand heading="Want ideas for your own home?" text="Book a free 30-minute site visit and get a 3D concept, tailored to your family." />
+</Base>

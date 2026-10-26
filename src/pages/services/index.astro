@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Img from '../../components/Img.astro';
+import Icon from '../../components/Icon.astro';
+import SectionHeading from '../../components/SectionHeading.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { url } from '../../lib/url';
+import { whatsappLink } from '../../config';
+import { services, servicePages } from '../../data/services';
+import { promises } from '../../data/content';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Aangan Interiors services',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: { '@type': 'Service', name: s.name, description: s.description, areaServed: 'Gujarat, India', provider: { '@type': 'Organization', name: 'Aangan Interiors' } },
+  })),
+};
+---
+<Base
+  title="Interior Design Services & Prices in Ahmedabad"
+  description="Home interiors from ₹8 lakh, bungalows from ₹25 lakh, modular kitchens from ₹2.5 lakh, offices from ₹1,800/sq ft. See every Aangan Interiors service and starting price."
+  image="livingBeige"
+  schema={[schema]}
+>
+  <PageHero
+    eyebrow="Services"
+    title="Everything your space needs, under one roof"
+    intro="Design, factory-made woodwork and on-site execution by our own team. Every service starts with a free site visit and ends with a warranty card."
+  />
+
+  <nav aria-label="Service pages" class="container-x">
+    <ul class="flex flex-wrap gap-3">
+      {
+        servicePages.map((s) => (
+          <li>
+            <a href={url(`/services/${s.slug}/`)} class="inline-flex min-h-11 items-center rounded-full border border-primary/30 px-5 text-sm font-medium text-primary hover:bg-primary hover:text-white">
+              {s.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <section class="container-x py-16 sm:py-20" aria-label="All services">
+    <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        services.map((s) => (
+          <li class="reveal">
+            <a href={url(`/services/${s.page}/`)} class="group flex h-full flex-col overflow-hidden rounded-md bg-white">
+              <div class="overflow-hidden">
+                <Img name={s.photo} ratio={0.7} max={640} sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw" class="zoom-img h-auto w-full object-cover" />
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <h2 class="text-2xl group-hover:text-brass-dark">{s.name}</h2>
+                <p class="mt-2 flex-1 text-[0.95rem] leading-relaxed text-muted">{s.description}</p>
+                <p class="mt-4 border-t border-primary/10 pt-4 text-sm font-semibold text-primary">{s.price}</p>
+              </div>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-8 text-sm text-muted">All prices are starting prices. You get one itemised, fixed quotation after your 3D design. Free first site visit within Ahmedabad.</p>
+  </section>
+
+  <section class="bg-sand py-20 sm:py-28" aria-labelledby="why-heading">
+    <div class="container-x">
+      <SectionHeading id="why-heading" eyebrow="Why Aangan" title="What makes us different" />
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+        {
+          promises.map((p) => (
+            <li class="reveal rounded-md bg-white p-6">
+              <Icon name="check" class="h-6 w-6 text-brass-dark" />
+              <h3 class="mt-4 text-2xl">{p.title}</h3>
+              <p class="mt-2 text-[0.95rem] leading-relaxed text-muted">{p.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <a href={whatsappLink()} target="_blank" rel="noopener" class="btn-primary reveal mt-10"><Icon name="whatsapp" /> Book free consultation</a>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
